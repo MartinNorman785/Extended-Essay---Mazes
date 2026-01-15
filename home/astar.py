@@ -8,6 +8,7 @@ def euclidean(loc, end):
     return ((loc[0]-end[0])**2 + (loc[1]-end[1])**2)**(1/2)
 
 def astar(grid, heuristic, weight=1, explored_count=False):
+    grid.start.distance = 0
     explored = set()
     frontier = []
 
@@ -50,11 +51,10 @@ def astar(grid, heuristic, weight=1, explored_count=False):
                     n.distance = current.distance + 1
                     n.prev = current
 
+                    n.heuristic = heuristic(neighbor, grid.get_tile_loc(grid.end))
+                    n.cost = round((n.distance + weight*n.heuristic)/(weight + 1), 3)
 
-                n.heuristic = heuristic(neighbor, grid.get_tile_loc(grid.end))
-                n.cost = round((n.distance + weight*n.heuristic)/(weight + 1), 1)
-
-                heapq.heappush(frontier, (n.cost, n))
+                    heapq.heappush(frontier, (n.cost, n))
 
 
 

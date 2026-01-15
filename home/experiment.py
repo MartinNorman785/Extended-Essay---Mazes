@@ -2,7 +2,6 @@ from grid import Grid
 from astar import *
 
 import pickle
-import pygame
 import time
 
 WEIGHTS = [x/10 for x in range(1, 20, 1)] + [x/100 for x in range(200, 501, 25)]
@@ -50,19 +49,10 @@ def conduct_trial(filename):
         man, explored = astar(grid, manhattan, weight, explored_count=True)
         end_time = time.perf_counter()
 
-        trial.path_distances_man[size] = len(man)
-        trial.time_takens_man[size] = end_time - start_time
-        trial.nodes_exploreds_man = explored
-        grid.reset_prevs()
-
-        start_time = time.perf_counter()
-        euc, explored = astar(grid, euclidean, weight, explored_count=True)
-        end_time = time.perf_counter()
-
-        trial.path_distances_euc[size] = len(euc)
-        trial.time_takens_euc[size] = end_time - start_time
-        trial.nodes_exploreds_euc = explored
-        grid.reset_prevs()
+        trial.path_distances_man[weight] = len(man)
+        trial.time_takens_man[weight] = end_time - start_time
+        trial.nodes_exploreds_man[weight] = explored
+        grid.reset_costs()
     return trial, size
 
 def conduct_trials(numbertrials, filepath):
@@ -76,9 +66,8 @@ def conduct_trials(numbertrials, filepath):
     return data
 
 if __name__ == "__main__":
-    pygame.init()
 
-    data = conduct_trials(1000, "TWENTYxTEN")
+    data = conduct_trials(4000, "mazes")
 
     with open('data.pkl', 'wb') as file:
         pickle.dump(data, file)

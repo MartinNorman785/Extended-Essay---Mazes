@@ -260,7 +260,7 @@ class Grid():
             for t in row:
                 t.distance = float('inf')
                 t.cost = None
-                t.heuritic = None
+                t.heuristic = None
         self.start.distance = 0
 
     
@@ -307,6 +307,8 @@ class Grid():
         self.end.make_end()
 
         self.best_path = bfs(self)
+
+        self.reset_costs()
 
 
 
