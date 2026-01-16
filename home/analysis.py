@@ -121,6 +121,7 @@ def load_and_plot(file_path):
 
     # Plot Time taken
     ax3.set_title("Average time taken")
+    ax3.set_yscale('log')
     ax3.set_xlabel("Weight")
     ax3.set_ylabel("Time Taken")
     ax3.grid(True, linestyle='--', alpha=0.6)
@@ -132,6 +133,78 @@ def load_and_plot(file_path):
 
     plt.show()
 
+
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 5))
+    fig.suptitle(f"Weighted A* Performance", fontsize=16)
+
+    nodes_wavg = []
+    opt_wavg = []
+    time_wavg = []
+
+    for w_idx, weight in enumerate(weights):
+        n = []
+        o = []
+        t = []
+
+        for trial in trials:
+            # 1. Parse the size string (e.g., "10x50") into an area
+            # trial.size is a string, we need to convert it to an integer area
+            dims = trial.size.split('x')
+            total_tiles = int(dims[0]) * int(dims[1])
+            
+            # 2. Get the values for the current weight from the dictionaries
+            # Using .get() is safer in case a specific weight failed/skipped
+            nodes = trial.nodes_exploreds_man.get(weight, 0)
+            path_len = trial.path_distances_man.get(weight, 0)
+            time_val = trial.time_takens_man.get(weight, 0)
+            
+            # 3. Normalize and add to our lists for averaging
+            # Nodes as a ratio of the total grid size
+            n.append(nodes / total_tiles)
+            
+            # Path length as a ratio of the BFS (best) path length
+            # Ensure we don't divide by zero if a path wasn't found
+            if trial.best_path_len > 0:
+                o.append(path_len / trial.best_path_len)
+            
+            t.append(time_val / total_tiles)
+
+        # 4. Calculate means for this weight
+        nodes_wavg.append(np.mean(n))
+        opt_wavg.append(np.mean(o))
+        time_wavg.append(np.mean(t)* 100)
+
+
+    ax1.plot(weights, nodes_wavg, label="A*", marker='o', markersize=4)
+    ax2.plot(weights, opt_wavg, label="A*", marker='o', markersize=4)
+    ax3.plot(weights, time_wavg, label='A*', marker='o', markersize=4)
+
+    # Plot Efficiency (Nodes Explored)
+    ax1.set_title("Search Efficiency (Lower is Better)")
+    ax1.set_xlabel("Weight")
+    ax1.set_ylabel("Avg Nodes Explored")
+    ax1.grid(True, linestyle='--', alpha=0.6)
+
+    # Plot Optimality (Path Length Ratio)
+    ax2.axhline(y=1.0, color='r', linestyle='--', label='Optimal')
+    ax2.set_title("Path Optimality (1.0 is Optimal)")
+    ax2.set_xlabel("Weight")
+    ax2.set_ylabel("Path Length / Best Path")
+    ax2.legend()
+    ax2.grid(True, linestyle='--', alpha=0.6)
+
+    # Plot Time taken
+    ax3.set_title("Average time taken")
+    ax3.set_xlabel("Weight")
+    ax3.set_ylabel("Time Taken")
+    ax3.grid(True, linestyle='--', alpha=0.6)
+
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+
+    file_name = f"astar_performance.png"
+    plt.savefig(file_name, dpi=300)
+
+    plt.show()
 
 
 if __name__ == "__main__":
