@@ -46,11 +46,14 @@ def load_and_plot(file_path):
         opt_all.append(opt_man)
         time_all.append(time_man)
 
+        dim = size_label.split("x")
+        total_tiles = int(dim[0]) * int(dim[1])
+
 
 
         for w in weights:
             # Average nodes explored at this weight
-            n_m = np.mean([t.nodes_exploreds_man[w] for t in trials])
+            n_m = np.mean([t.nodes_exploreds_man[w] / total_tiles for t in trials])
             nodes_man.append(n_m)
 
             # Average optimality ratio (1.0 is perfect)
@@ -66,26 +69,28 @@ def load_and_plot(file_path):
 
         # Plot Efficiency (Nodes Explored)
         ax1.plot(weights, nodes_man, label='Manhattan', marker='o', markersize=4)
-        ax1.set_title("Search Efficiency (Lower is Better)")
-        ax1.set_xlabel("Weight")
-        ax1.set_ylabel("Avg Nodes Explored")
-        ax1.grid(True, linestyle='--', alpha=0.6)
+        ax1.set_title("Search Efficiency")
+        ax1.set_ylabel("Nodes Explored / Total Tiles")
 
         # Plot Optimality (Path Length Ratio)
         ax2.plot(weights, opt_man, label='A*', marker='o', markersize=4)
         ax2.axhline(y=1.0, color='r', linestyle='--', label='Optimal')
-        ax2.set_title("Path Optimality (1.0 is Optimal)")
-        ax2.set_xlabel("Weight")
-        ax2.set_ylabel("Path Length / Best Path")
-        ax2.legend()
-        ax2.grid(True, linestyle='--', alpha=0.6)
+        ax2.set_title("Path Optimality")
+        ax2.set_ylabel("Found Path / Shortest Path")
 
         # Plot Time taken
         ax3.plot(weights, time_man, label='Manhattan', marker='o', markersize=4)
-        ax3.set_title("Average time taken")
-        ax3.set_xlabel("Weight")
-        ax3.set_ylabel("Time Taken")
-        ax3.grid(True, linestyle='--', alpha=0.6)
+        ax3.set_title("Normalized Execution Time")
+        ax3.set_ylabel("Time per 1000 Tiles (ms)")
+        ax3.set_yscale('log')
+
+        for ax in [ax1, ax2, ax3]:
+            ax.set_xlabel("Weight")
+            ax.grid(True, alpha=0.3)
+            # Optional: zoom in on the interesting part of the X axis
+            # ax.set_xlim(0.8, 5.0) 
+
+        ax1.legend(markerscale=1)
 
         plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 
@@ -106,25 +111,25 @@ def load_and_plot(file_path):
         ax3.plot(weights, time_all[i], label=size_label, marker='o', markersize=4)
     
     # Plot Efficiency (Nodes Explored)
-    ax1.set_title("Search Efficiency (Lower is Better)")
-    ax1.set_xlabel("Weight")
-    ax1.set_ylabel("Avg Nodes Explored")
+    ax1.set_title("Search Efficiency")
+    ax1.set_ylabel("Nodes Explored / Total Tiles")
     ax1.grid(True, linestyle='--', alpha=0.6)
 
     # Plot Optimality (Path Length Ratio)
     ax2.axhline(y=1.0, color='r', linestyle='--', label='Optimal')
-    ax2.set_title("Path Optimality (1.0 is Optimal)")
-    ax2.set_xlabel("Weight")
-    ax2.set_ylabel("Path Length / Best Path")
+    ax2.set_title("Path Optimality")
+    ax2.set_ylabel("Found Path / Shortest Path")
     ax2.legend()
-    ax2.grid(True, linestyle='--', alpha=0.6)
 
     # Plot Time taken
     ax3.set_title("Average time taken")
     ax3.set_yscale('log')
-    ax3.set_xlabel("Weight")
     ax3.set_ylabel("Time Taken")
     ax3.grid(True, linestyle='--', alpha=0.6)
+
+    for ax in [ax1, ax2, ax3]:
+        ax.set_xlabel("Weight")
+        ax.grid(True, alpha=0.3)
 
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 
@@ -180,24 +185,24 @@ def load_and_plot(file_path):
     ax3.plot(weights, time_wavg, label='A*', marker='o', markersize=4)
 
     # Plot Efficiency (Nodes Explored)
-    ax1.set_title("Search Efficiency (Lower is Better)")
-    ax1.set_xlabel("Weight")
-    ax1.set_ylabel("Avg Nodes Explored")
-    ax1.grid(True, linestyle='--', alpha=0.6)
+    ax1.set_title("Search Efficiency")
+    ax1.set_ylabel("Nodes Explored / Total Tiles")
 
     # Plot Optimality (Path Length Ratio)
     ax2.axhline(y=1.0, color='r', linestyle='--', label='Optimal')
-    ax2.set_title("Path Optimality (1.0 is Optimal)")
-    ax2.set_xlabel("Weight")
-    ax2.set_ylabel("Path Length / Best Path")
+    ax2.set_title("Path Optimality")
+    ax2.set_ylabel("Found Path / Shortest Path")
     ax2.legend()
-    ax2.grid(True, linestyle='--', alpha=0.6)
 
     # Plot Time taken
     ax3.set_title("Average time taken")
-    ax3.set_xlabel("Weight")
+    ax3.set_yscale('log')
     ax3.set_ylabel("Time Taken")
-    ax3.grid(True, linestyle='--', alpha=0.6)
+
+    for ax in [ax1, ax2, ax3]:
+        ax.set_xlabel("Weight")
+        ax.grid(True, alpha=0.3)
+
 
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 

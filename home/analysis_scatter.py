@@ -61,7 +61,7 @@ def load_and_plot(file_path):
                 node_ratio = nodes / total_tiles
                 opt_ratio = path_len / trial.best_path_len if trial.best_path_len > 0 else 1
                 # Time per 1000 tiles to make the number readable
-                norm_time = (time_val / total_tiles) * 1000 
+                norm_time = time_val
 
                 # Add to scatter lists
                 scatter_w.append(weight)
@@ -81,7 +81,7 @@ def load_and_plot(file_path):
 
         # --- Plotting ---
         fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18, 6))
-        fig.suptitle("Weighted A* Performance Distribution (All Maze Sizes)", fontsize=16)
+        fig.suptitle(f"Weighted A* Performance Distribution {size_label}", fontsize=16)
 
         # 1. Efficiency Scatter
         ax1.scatter(scatter_w, scatter_nodes, alpha=0.1, s=1, color='blue', label='Individual Trial')
@@ -99,8 +99,8 @@ def load_and_plot(file_path):
         # 3. Time Scatter
         ax3.scatter(scatter_w, scatter_time, alpha=0.1, s=1, color='purple')
         ax3.plot(weights, time_means, color='red', linewidth=2)
-        ax3.set_title("Normalized Execution Time")
-        ax3.set_ylabel("Time per 1000 Tiles (ms)")
+        ax3.set_title("Execution Time")
+        ax3.set_ylabel("Time")
         ax3.set_yscale('log') # Log scale is still helpful for time variance
 
         for ax in [ax1, ax2, ax3]:
