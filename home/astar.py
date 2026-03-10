@@ -55,6 +55,7 @@ def astar(grid, heuristic, weight=1, explored_count=False):
                     n.cost = round((n.distance + weight*n.heuristic)/(weight + 1), 3)
 
                     heapq.heappush(frontier, (n.cost, n))
+                    explored.remove(n)
 
 
 
