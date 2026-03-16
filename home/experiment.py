@@ -57,17 +57,21 @@ def conduct_trial(filename):
 
 def conduct_trials(numbertrials, filepath):
     data = Data()
-    for x in range(numbertrials):
+    for x in range(numbertrials, 6000):
         print(x)
         filename = filepath + "/" + str(x) + ".txt"
         trial, size = conduct_trial(filename)
 
         data.add_trial(trial, size)
+
+        with open('data1.pkl', 'wb') as file:
+            pickle.dump(data, file)
+            
     return data
 
 if __name__ == "__main__":
 
-    data = conduct_trials(6000, "mazes")
+    data = conduct_trials(5299, "mazes")
 
     with open('data.pkl', 'wb') as file:
         pickle.dump(data, file)
