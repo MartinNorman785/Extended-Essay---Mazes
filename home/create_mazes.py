@@ -10,13 +10,15 @@ for size in [(10, 10), (20, 10), (30, 10), (40, 20), (50, 30), (100, 50)]:
     BASIC MAZES: All Random x 300
     '''
 
+    modifier = size[0]*size[1]/10
+
     total += 300
 
 
     while created < total:
-        noise = max(int(random.gauss(mu=1.5*size[0], sigma=0.2*size[0])), 1)
-        chunks = max(int(random.gauss(mu=0.4*size[0], sigma=0.1*size[0])), 1)
-        walls = max(int(random.gauss(mu=0.1*size[0], sigma=0.02*size[0])), 0)
+        noise = max(int(random.gauss(mu=1.5*modifier, sigma=0.2*size[0])), 1)
+        chunks = max(int(random.gauss(mu=0.4*modifier, sigma=0.1*size[0])), 1)
+        walls = max(int(random.gauss(mu=0.1*modifier, sigma=0.02*size[0])), 0)
         try:
             grid = Grid(size[0], size[1], noise, 0, 0)
             grid.save("mazes/" + str(created) + ".txt")
@@ -34,7 +36,7 @@ for size in [(10, 10), (20, 10), (30, 10), (40, 20), (50, 30), (100, 50)]:
     total += 100
 
     while created < total:
-        noise = max(int(random.gauss(mu=2.5*size[0], sigma=0.2*size[0])), 1)
+        noise = max(int(random.gauss(mu=2.5*modifier, sigma=0.2*size[0])), 1)
         try:
             grid = Grid(size[0], size[1], noise, 0, 0)
             grid.save("mazes/" + str(created) + ".txt")
@@ -52,8 +54,8 @@ for size in [(10, 10), (20, 10), (30, 10), (40, 20), (50, 30), (100, 50)]:
     total += 400
 
     while created < total:
-        noise = max(int(random.gauss(mu=1.5*size[0], sigma=0.2*size[0])), 1)
-        chunks = max(int(random.gauss(mu=0.6*size[0], sigma=0.1*size[0])), 1)
+        noise = max(int(random.gauss(mu=1.5*modifier, sigma=0.2*size[0])), 1)
+        chunks = max(int(random.gauss(mu=0.6*modifier, sigma=0.1*size[0])), 1)
         try:
             grid = Grid(size[0], size[1], noise, chunks, 0)
             grid.save("mazes/" + str(created) + ".txt")
@@ -71,7 +73,7 @@ for size in [(10, 10), (20, 10), (30, 10), (40, 20), (50, 30), (100, 50)]:
     total += 200
 
     while created < total:
-        noise = max(int(random.gauss(mu=1.5*size[0], sigma=0.2*size[0])), 1)
+        noise = max(int(random.gauss(mu=1.5*modifier, sigma=0.2*size[0])), 1)
         walls = max(int(random.gauss(mu=0.15*size[0], sigma=0.03*size[0])), 0)
         try:
             grid = Grid(size[0], size[1], noise, 0, walls)

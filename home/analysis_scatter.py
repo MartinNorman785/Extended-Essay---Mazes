@@ -1,6 +1,7 @@
 import pickle
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.optimize import curve_fit
 
 # Re-defining skeletons for Pickle to map the data correctly
 class Trial:
@@ -26,6 +27,7 @@ def load_and_plot(file_path):
 
     for size_label in sizes:
         all_trials = data.trials[size_label]
+        print(len(all_trials))
         if not all_trials: continue
 
         # Extract weights (assuming all trials use the same WEIGHTS list)
@@ -73,12 +75,60 @@ def load_and_plot(file_path):
                 n_at_w.append(node_ratio)
                 o_at_w.append(opt_ratio)
                 t_at_w.append(norm_time)
+            
 
             # Calculate means for the trend line
             nodes_means.append(np.mean(n_at_w))
             opt_means.append(np.mean(o_at_w))
             time_means.append(np.mean(t_at_w))
 
+        x = np.concatenate((np.arange(1.0, 2.0, 0.1), np.arange(2.0, 5.1, 0.25)))
+        y = np.array(nodes_means[9:])
+        ylog = np.log(y)
+
+        initial_guess = [1, -10, 0.0]
+
+        def exponential_with_constant(x, a, b, c):
+            return a * np.exp(b * x) + c
+
+        popt, pcov = curve_fit(exponential_with_constant, x, y, p0=initial_guess)
+
+        # Extract the fitted parameters
+        a, b, c = popt
+
+        print()
+        print()
+        print(f"Formula: y = {a:.4f} * exp({b:.4f} * x) + {c:.4f}")
+        print()
+
+        for i in range(23):
+            print(y[i], exponential_with_constant(x[i], a, b, c), x[i])
+
+
+        '''
+        regression_weights = np.ones(len(x))
+        if len(x) >= 32:
+            regression_weights[:20] = 0.1
+            regression_weights[20:32] = 0.5
+
+        coeffs = np.polyfit(x, ylog, 1, w=regression_weights)
+        a, b = np.exp(coeffs[0]), coeffs[1]
+
+        def exp(x):
+            return a * np.exp(coeffs[1] * x)
+
+        y_pred = exp(x)
+
+        for i in range(12):
+            print(y[i], y_pred[i], x[i])
+
+        ss_res = np.sum((y - y_pred)**2)
+        ss_tot = np.sum((y - np.mean(y))**2)
+        r2 = 1 - ss_res/ss_tot
+
+        print(size_label, r2, 'nodes_means')
+        print(f"Formula: y = {a:.4f} * exp({b:.4f} * x)")
+        '''
         # --- Plotting ---
         fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18, 6))
         fig.suptitle(f"Weighted A* Performance Distribution {size_label}", fontsize=16)
@@ -118,8 +168,7 @@ def load_and_plot(file_path):
 
 
 if __name__ == "__main__":
-    # Ensure 'data.pkl' is in the same directory
     try:
-        load_and_plot('data.pkl')
+        load_and_plot('data_final.pkl')
     except FileNotFoundError:
         print("Error: data.pkl not found. Please run experiment.py first.")

@@ -63,13 +63,15 @@ def conduct_trials(numbertrials, filepath):
         trial, size = conduct_trial(filename)
 
         data.add_trial(trial, size)
+
+            
     return data
 
 if __name__ == "__main__":
 
-    data = conduct_trials(6000, "mazes")
+    data = conduct_trials(5000, "mazes")
 
-    with open('data.pkl', 'wb') as file:
+    with open('data7.pkl', 'wb') as file:
         pickle.dump(data, file)
 
 
