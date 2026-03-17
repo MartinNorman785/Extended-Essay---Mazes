@@ -140,7 +140,7 @@ def load_and_plot(file_path):
 
 
     fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 5))
-    fig.suptitle(f"Weighted A* Performance", fontsize=16)
+    fig.suptitle(f"Combined Weighted A* Performance", fontsize=16)
 
     nodes_wavg = []
     opt_wavg = []
@@ -177,7 +177,7 @@ def load_and_plot(file_path):
         # 4. Calculate means for this weight
         nodes_wavg.append(np.mean(n))
         opt_wavg.append(np.mean(o))
-        time_wavg.append(np.mean(t)* 100)
+        time_wavg.append(np.mean(t))
 
 
     ax1.plot(weights, nodes_wavg, label="A*", marker='o', markersize=4)
@@ -195,7 +195,7 @@ def load_and_plot(file_path):
     ax2.legend()
 
     # Plot Time taken
-    ax3.set_title("Average time taken")
+    ax3.set_title("Average time taken / Total Tiles")
     ax3.set_yscale('log')
     ax3.set_ylabel("Time Taken")
 
@@ -215,6 +215,6 @@ def load_and_plot(file_path):
 if __name__ == "__main__":
     # Ensure 'data.pkl' is in the same directory
     try:
-        load_and_plot('data.pkl')
+        load_and_plot('data_final.pkl')
     except FileNotFoundError:
         print("Error: data.pkl not found. Please run experiment.py first.")

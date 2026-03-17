@@ -168,8 +168,7 @@ def load_and_plot(file_path):
 
 
 if __name__ == "__main__":
-    # Ensure 'data.pkl' is in the same directory
     try:
-        load_and_plot('data.pkl')
+        load_and_plot('data_final.pkl')
     except FileNotFoundError:
         print("Error: data.pkl not found. Please run experiment.py first.")

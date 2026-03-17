@@ -64,59 +64,61 @@ def load_and_boxplot(file_path):
             optimality_data.append(opt_at_w)
             time_data.append(time_at_w)
 
-    # 4. Create the Plot
-    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 7))
-    fig.suptitle("Weighted A* Performance (Linear Weight Scaling)", fontsize=18, fontweight='bold')
+   
+        # 2. Create the Plots
+        fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 5))
+        fig.suptitle(f"Weighted A* Performance: Grid Size {size_label}", fontsize=16)
 
-    # Style: Purple palette to distinguish from previous "even" plots
-    box_style = dict(patch_artist=True, 
-                     boxprops=dict(facecolor='#F5EEF8', color='#8E44AD', alpha=0.7),
-                     medianprops=dict(color='#5B2C6F', linewidth=2),
-                     flierprops=dict(marker='o', markersize=2, alpha=0.2))
+        # Style: Purple palette to distinguish from previous "even" plots
+        box_style = dict(patch_artist=True, 
+                        boxprops=dict(facecolor='#F5EEF8', color='#8E44AD', alpha=0.7),
+                        medianprops=dict(color='#5B2C6F', linewidth=2),
+                        flierprops=dict(marker='o', markersize=2, alpha=0.2))
 
-    # 1. Prepare the data (Assuming weights is your list of 0.1 ... 5.0)
-    weights = sorted(all_trials[0].path_distances_man.keys()) 
+        # 1. Prepare the data (Assuming weights is your list of 0.1 ... 5.0)
+        weights = sorted(all_trials[0].path_distances_man.keys()) 
 
-    # 2. Create the Figure
-    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(22, 7))
+        # 2. Create the Figure
+        fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 5))
 
-    # 3. Plot using 'positions=weights'
-    # This puts the box for weight 5.0 at coordinate 5.0 on the x-axis.
-    # We set 'widths' small (0.07) so the 0.1-increment boxes don't touch.
-    box_width = 0.07 
-    style = dict(patch_artist=True, boxprops=dict(facecolor='#E8F8F5', color='#16A085'))
+        # 3. Plot using 'positions=weights'
+        # This puts the box for weight 5.0 at coordinate 5.0 on the x-axis.
+        # We set 'widths' small (0.07) so the 0.1-increment boxes don't touch.
+        box_width = 0.07 
+        style = dict(patch_artist=True, boxprops=dict(facecolor='#E8F8F5', color='#16A085'))
 
-    ax1.boxplot(efficiency_data, positions=weights, widths=box_width, **style)
-    ax2.boxplot(optimality_data, positions=weights, widths=box_width, **style)
-    ax3.boxplot(time_data, positions=weights, widths=box_width, **style)
+        ax1.boxplot(efficiency_data, positions=weights, widths=box_width, **style)
+        ax2.boxplot(optimality_data, positions=weights, widths=box_width, **style)
+        ax3.boxplot(time_data, positions=weights, widths=box_width, **style)
 
-    # 4. Format the X-Axis to show the full 0.1 - 5.0 range
-    for ax in [ax1, ax2, ax3]:
-        # Set ticks every 0.5 so they don't overlap, but the boxes stay at their weights
-        tick_values = np.arange(0, 5.5, 0.5)
-        ax.set_xticks(tick_values)
+        # 4. Format the X-Axis to show the full 0.1 - 5.0 range
+        for ax in [ax1, ax2, ax3]:
+            # Set ticks every 0.5 so they don't overlap, but the boxes stay at their weights
+            tick_values = np.arange(0, 5.5, 0.5)
+            ax.set_xticks(tick_values)
+            
+            # Force the x-axis to show the whole range
+            ax.set_xlim(0, 5.2) 
+            
+            ax.set_xlabel("Weight ($w$)")
+            ax.grid(True, linestyle=':', alpha=0.6)
+
+        ax1.set_ylabel("Nodes Explored / Total Tiles")
+        ax2.set_ylabel("Path Length / Shortest Path")
+        ax2.axhline(y=1.0, color='r', linestyle='--', label='Optimal')
+        ax3.set_ylabel("Time (ms / 1k tiles)")
+        ax3.set_yscale('log')
+
+
+        plt.tight_layout(rect=[0, 0, 1, 0.95])
+        fig.suptitle(f"Weighted A* Performance: Grid Size {size_label}", fontsize=16)
         
-        # Force the x-axis to show the whole range
-        ax.set_xlim(0, 5.2) 
-        
-        ax.set_xlabel("Weight ($w$)")
-        ax.grid(True, linestyle=':', alpha=0.6)
-
-    ax1.set_ylabel("Nodes Explored / Total Tiles")
-    ax2.set_ylabel("Path Length / Shortest Path")
-    ax2.axhline(y=1.0, color='r', linestyle='--', label='Optimal')
-    ax3.set_ylabel("Time (ms / 1k tiles)")
-    ax3.set_yscale('log')
-
-
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    
-    file_name = f"astar_boxplot_{size_label}.png"
-    plt.savefig(file_name, dpi=300)
-    plt.show()
+        file_name = f"astar_boxplot_{size_label}.png"
+        plt.savefig(file_name, dpi=300)
+        plt.show()
 
 if __name__ == "__main__":
     try:
-        load_and_boxplot('data.pkl')
+        load_and_boxplot('data_final.pkl')
     except FileNotFoundError:
         print("Error: data.pkl not found.")
