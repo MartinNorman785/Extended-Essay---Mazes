@@ -32,6 +32,7 @@ def load_and_boxplot(file_path):
         # Extract and sort the weights used in this batch
         weights = sorted(all_trials[0].path_distances_man.keys())
 
+
         # Prepare lists to hold a list of values for EACH weight
         # e.g., efficiency_data = [[vals for w1], [vals for w2], ...]
         efficiency_data = []
@@ -64,6 +65,8 @@ def load_and_boxplot(file_path):
             optimality_data.append(opt_at_w)
             time_data.append(time_at_w)
 
+        
+
    
         # 2. Create the Plots
         fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 5))
@@ -91,14 +94,17 @@ def load_and_boxplot(file_path):
         ax2.boxplot(optimality_data, positions=weights, widths=box_width, **style)
         ax3.boxplot(time_data, positions=weights, widths=box_width, **style)
 
+
         # 4. Format the X-Axis to show the full 0.1 - 5.0 range
         for ax in [ax1, ax2, ax3]:
             # Set ticks every 0.5 so they don't overlap, but the boxes stay at their weights
             tick_values = np.arange(0, 5.5, 0.5)
             ax.set_xticks(tick_values)
+            ax.set_xticks([0.1, 1, 2, 3, 4, 5])
+            ax.autoscale(enable=False, axis='x')
             
             # Force the x-axis to show the whole range
-            ax.set_xlim(0, 5.2) 
+            ax.set_xlim(0, 5.2)
             
             ax.set_xlabel("Weight ($w$)")
             ax.grid(True, linestyle=':', alpha=0.6)
